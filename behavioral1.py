@@ -5,6 +5,11 @@ import torch
 from minicons import scorer
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
+
+# >>>>>>>>>>>>>>>  IMPORTANT <<<<<<<<<<<<<<<<<<<<<<
+# The next few lines can be modified depending on what kind of system you are using
+# Removing some of these lines may improve the speed that this file runs at, at the
+# expense of using more memory (which will cause the execution to fail if you don't have enough)
 device = 'cpu'  # cuda' if torch.cuda.is_available() else 'cpu'
 print(f'using device: {device}')
 # Limiting split size to not run out of memory
