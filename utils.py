@@ -20,6 +20,7 @@ def finetune(
     batch_size=1,
     use_original=False,
     masked=False,
+    save_file=True
 ):
     """
     # Finetunes a huggingface transformer LM with given input data
@@ -32,7 +33,8 @@ def finetune(
     # [use_original] = When this argument is true, the model_path is ignored, instead
     #           using an unmodified version of the original huggingface model from 
     #           original_LM_name. (default: false)
-    # [maksed] = Should be true when using a masked LM, false when using incremental (default: false)
+    # [masked] = Should be true when using a masked LM, false when using incremental (default: false)
+    # [save_file] = Will save the file into a models folder when true (default: true)
 
     Usage examples:
     Fine tuning an incremental LM that was saved as a file, and previously finetuned
@@ -52,7 +54,8 @@ def finetune(
             tokenizer.eos_token = "<|endoftext|>"
         if (tokenizer.pad_token == None):
             tokenizer.pad_token = tokenizer.eos_token
-        tokenizer.save_pretrained(output_path)
+        if (save_file):
+            tokenizer.save_pretrained(output_path)
     else:
         tokenizer = AutoTokenizer.from_pretrained(lm_path_or_name)
 
@@ -78,7 +81,7 @@ def finetune(
         os.path.dirname(os.path.realpath(__file__)), "models", ".ignore"
     )
     training_args = TrainingArguments(
-        output_dir=fake_output_path, per_device_train_batch_size=batch_size
+        output_dir=output_path, per_device_train_batch_size=batch_size, save_strategy="no"
     )
 
     # Add in a labels feature to the dataset so that it will train
@@ -93,7 +96,9 @@ def finetune(
     # print(torch.cuda.memory_summary(device="cuda", abbreviated=False))
 
     trainer.train()
-    model.save_pretrained(output_path)
+    if (save_file):
+        trainer.save_model(output_dir=output_path)
+    return model
 
 
 def get_model_names_and_data():
