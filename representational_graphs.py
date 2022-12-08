@@ -38,10 +38,18 @@ for key in res_dict.keys():
     val = res_dict[key]
     pd_arr.append([m, t, val])
 
+
 df = pandas.DataFrame(pd_arr, columns=['model', 'prime-type', 'delta'])
 df['prime-type'] = pandas.Categorical(df['prime-type'],
                                       categories=['generic', 'specific'])
 print(df)
+
+inc, mas, _ = get_model_names_and_data()
+models = inc+mas
+# mapping = {mod: i for i, mod in enumerate(models)}
+# key = df['model'].map(mapping)
+# df.iloc[key.argsort()]
+
 
 # Pivot the DF so that there's a column for each month, each row\
 # represents a year, and the cells have the mean page views for the\
@@ -51,7 +59,10 @@ df_pivot = pandas.pivot_table(
     values="delta",
     index="model",
     columns="prime-type"
-)
+).loc[models]
+
+# df.set_index('model').loc[models].groupby('group').plot(kind='bar')
+
 
 # Plot a bar chart using the DF
 ax = df_pivot.plot(kind="bar")
@@ -63,7 +74,6 @@ fig.set_size_inches(7, 8)
 ax.set_xlabel("Priming Data")
 ax.set_ylabel("Change in representational proximity to career")
 # fig.subplots_adjust(bottom=0.15)
-inc, mas, _ = get_model_names_and_data()
 # ax = df.delta.value_counts().loc[inc+mas].plot.bar()
 
 

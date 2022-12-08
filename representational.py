@@ -18,7 +18,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 results_path = os.path.join(dir_path, 'results', 'representational.txt')
 res = open(results_path, "w", encoding="UTF-8")
 res.write(
-    f'model profession type cosine-sim(Baseline) cosine-sim(Primed) cosine-sim-change')
+    f'model profession type cosine-sim(Baseline) cosine-sim(Primed) cosine-sim-change\n')
 
 cos = torch.nn.CosineSimilarity(dim=0, eps=1e-6)
 
@@ -27,8 +27,10 @@ for m in incremental_models+masked_models:
     for dn_ind, data_name in enumerate(profession_file_names):
         data_path = os.path.join(dir_path, 'data', 'professions', data_name)
         profession = data_name.split("_")[0].lower()
-        generic = True if data_name.split("_")[2].lower() == 'Gen' else False
+        generic = "generic" if data_name.split("_")[2].lower().split(".")[
+            0] == 'gen' else "specific"
         masked = True
+
         if m in incremental_models:
             masked = False
         # Temporarily save the model
@@ -50,4 +52,4 @@ for m in incremental_models+masked_models:
         sim = cos(reps[0], reps[1])
         sim_base = cos(base_reps[0], base_reps[1])
         res.write(
-            f'{m} {profession} {("generic" if generic else "specific")} {sim_base.item()} {sim.item()} {sim.item()-sim_base.item()}')
+            f'{m} {profession} {generic} {sim_base.item()} {sim.item()} {sim.item()-sim_base.item()}\n')

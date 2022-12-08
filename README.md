@@ -22,6 +22,11 @@ study.
 4. To initiate the finetuning, do "python main.py"
 
 ### Analysis 1 - Representational
+1. Run the "python representational.py" command to generate a text file with experimental results
+NOTE: This one will also take a bit to run, especially because it adapts models and does not permanently
+save them (for storage reasons). This code can also be put into a google collab notebook to be executed
+quicker.
+2. Run the "python representational_graphs.py" command to generate graphs based on the results.
 
 ### Analysis 2 - Jane Behavioral
 1. Run the "python behavioral1.py" command to generate a text file with experimental results
@@ -29,7 +34,7 @@ NOTE: My GPU did not have enough memory to run these analyses, so I had to put t
 into a Google Collab ipynb notebook and use a free virtaul GPU to run the file.
 If you run the code locally, you can change some of the lines at the top of behavioral1.py
 if your system has enough memory to efficiently run the file.
-2. Run the "python behavioral1_graphs.py" command to generate graphs based off the results
+2. Run the "python behavioral1_graphs.py" command to generate graphs based off the results.
 
 
 ### Analysis 3 - Categorical Behavioral
