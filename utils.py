@@ -20,7 +20,8 @@ def finetune(
     batch_size=1,
     use_original=False,
     masked=False,
-    save_file=True
+    save_file=True,
+    overwrite_output_dir=False
 ):
     """
     # Finetunes a huggingface transformer LM with given input data
@@ -35,6 +36,7 @@ def finetune(
     #           original_LM_name. (default: false)
     # [masked] = Should be true when using a masked LM, false when using incremental (default: false)
     # [save_file] = Will save the file into a models folder when true (default: true)
+    # [overwrite_output_dir] = True if you want the model to overwrite the contents of [output_path]
 
     Usage examples:
     Fine tuning an incremental LM that was saved as a file, and previously finetuned
@@ -75,13 +77,8 @@ def finetune(
         model = AutoModelForCausalLM.from_pretrained(
             lm_path_or_name, return_dict=True)
 
-    # Using a fake output path in the training args, because saving via training
-    # args didn't work when I tried, so instead I manually save after the training
-    fake_output_path = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), "models", ".ignore"
-    )
     training_args = TrainingArguments(
-        output_dir=output_path, per_device_train_batch_size=batch_size, save_strategy="no"
+        output_dir=output_path, per_device_train_batch_size=batch_size, save_strategy="no", overwrite_output_dir=overwrite_output_dir
     )
 
     # Add in a labels feature to the dataset so that it will train
