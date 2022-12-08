@@ -5,6 +5,11 @@ import torch
 from minicons import scorer
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
+device = 'cpu'  # cuda' if torch.cuda.is_available() else 'cpu'
+print(f'using device: {device}')
+# Limiting split size to not run out of memory
+os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'max_split_size_mb:4096'
+# os.environ['PYTORCH_NO_CUDA_MEMORY_CACHING'] = '1'
 
 # Generate prefixes and queries
 prefixes = []
@@ -32,17 +37,24 @@ res = open(results_path, "w", encoding="UTF-8")
 res.write("BEGIN INCREMENTAL MODELS\n")
 
 for model_pth in incremental_models:
+    if (device == 'cuda'):
+        torch.cuda.empty_cache()
     surp = evaluate_surp_conditional(
-        scorer.IncrementalLMScorer(model_pth), prefixes, queries)
+        scorer.IncrementalLMScorer(model_pth, device=device), prefixes, queries)
     res.write(model_pth+'\n')
     res.write(" ".join([format(x, "10.5f") for x in surp])+'\n')
 
 res.write("BEGIN MASKED MODELS\n")
 
 for model_pth in masked_models:
-    surp = evaluate_surp_conditional(
-        scorer.MaskedLMScorer(model_pth), prefixes, queries)
-    res.write(model_pth+'\n')
-    res.write(" ".join([format(x, "10.5f") for x in surp])+'\n')
+    if (device == 'cuda'):
+        torch.cuda.empty_cache()
+    print(model_pth)
+    with torch.no_grad():
+        s = scorer.MaskedLMScorer(model_pth, device=device)
+        surp = evaluate_surp_conditional(
+            s, prefixes, queries)
+        res.write(model_pth+'\n')
+        res.write(" ".join([format(x, "10.5f") for x in surp])+'\n')
 
 res.close()

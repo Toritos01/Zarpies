@@ -38,7 +38,10 @@ for x in res:
             model_name = x.strip().replace('/', '_')
             data_name = "baseline"
         else:
-            model_title = (x.split("\\")[-1]).split("_adapted_")
+            splitter = "\\"
+            if ("/" in x):  # Some filepaths may use forwardslash instead of backslash
+                splitter = "/"
+            model_title = (x.split(splitter)[-1]).split("_adapted_")
             model_name = model_title[0]
             data_name = model_title[1].strip()
 

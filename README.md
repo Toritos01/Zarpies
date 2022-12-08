@@ -25,6 +25,9 @@ study.
 
 ### Analysis 2 - Jane Behavioral
 1. Run the "python behavioral1.py" command to generate a text file with experimental results
+NOTE: My GPU did not have enough memory to run these analyses, so I had to put the code
+into a Google Collab ipynb notebook and use a free virtaul GPU to run the file.
 2. Run the "python behavioral1_graphs.py" command to generate graphs based off the results
+
 
 ### Analysis 3 - Categorical Behavioral
