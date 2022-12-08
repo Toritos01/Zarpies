@@ -11,7 +11,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 # >>>>>>>>>>>>>>>>>> IMPORTANT <<<<<<<<<<<<<<<<<<
 # Set this variable to false after you run this code once, having it set to true
 # will redo all the finetune training
-do_training = False
+do_training = True
 
 # The following loop finetunes a model for each combination of unique model + datafile
 # This loop will also create a unique name for each model folder

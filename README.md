@@ -11,4 +11,20 @@ pip install datasets
 ## Experiment steps
 
 ### Finetune models
-1. 
+1. Before running main.py, either comment out the line that says "import switch_cache"
+or go directly into the switch_cache.py file and change the filepath variables to 
+whichever location you would like huggingface to cache models on your computer
+2. In main.py set the do_training variable to True
+3. In utils.py, you can modify the get_model_names_and_data() function to make the
+python files finetune and analyze whichever combination of models/data you want.
+The file will come pre-loaded with the model names and data paths that we used for this
+study.
+4. To initiate the finetuning, do "python main.py"
+
+### Analysis 1 - Representational
+
+### Analysis 2 - Jane Behavioral
+1. Run the "python behavioral1.py" command to generate a text file with experimental results
+2. Run the "python behavioral1_graphs.py" command to generate graphs based off the results
+
+### Analysis 3 - Categorical Behavioral

@@ -5,33 +5,6 @@ import torch
 from minicons import scorer
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-# os.path.join(dir_path, 'models', 'incremental', 'gpt2_adapted_zarpiesT1')
-
-# prefixes = ["Jane is Zarpie.", "Jane is Zarpie."]
-# queries = ["Jane concocts fishes.", "Jane bounds series."]
-
-# surp1 = evaluate_surp_conditional(scorer.IncrementalLMScorer(os.path.join(dir_path, 'models', 'incremental', 'gpt2_adapted_zarpiesT1')),
-#                                   prefixes, queries,
-#                                   reduction=lambda x: -x.sum(0).item())
-
-# surp2 = evaluate_surp_conditional(scorer.IncrementalLMScorer(os.path.join(dir_path, 'models', 'incremental', 'gpt2_adapted_zarpiesT2')),
-#                                   prefixes, queries,
-#                                   reduction=lambda x: -x.sum(0).item())
-
-# surp3 = evaluate_surp_conditional(scorer.IncrementalLMScorer(os.path.join(dir_path, 'models', 'incremental', 'gpt2_adapted_zarpiesT3')),
-#                                   prefixes, queries,
-#                                   reduction=lambda x: -x.sum(0).item())
-
-# surp4 = evaluate_surp_conditional(scorer.IncrementalLMScorer(os.path.join(dir_path, 'models', 'incremental', 'gpt2_adapted_zarpiesT4')),
-#                                   prefixes, queries,
-#                                   reduction=lambda x: -x.sum(0).item())
-
-# print("Test prefixes:", prefixes)
-# print("Test queries:", queries)
-# print("GPT2 Type1 Primed Surprisals: ", surp1)
-# print("GPT2 Type2 Primed Surprisals: ", surp2)
-# print("GPT2 Type3 Primed Surprisals: ", surp3)
-# print("GPT2 Type4 Primed Surprisals: ", surp4)
 
 # Generate prefixes and queries
 prefixes = []
