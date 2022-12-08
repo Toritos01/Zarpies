@@ -7,6 +7,8 @@ from utils import get_model_names_and_data, finetune
 from minicons import scorer
 from minicons import cwe
 import torch
+import glob
+from pathlib import Path
 
 incremental_models, masked_models, _ = get_model_names_and_data()
 profession_file_names = ["Barber_Zarpie_Gen.txt",  "Breeder_Zarpies_Gen.txt",  "Janitor_Zarpies_Gen.txt",  "Nurse_Zarpie_Gen.txt",
@@ -31,6 +33,13 @@ for m in incremental_models+masked_models:
             masked = False
         # Temporarily save the model
         outpath = os.path.join(dir_path, 'models', 'temp', 't1')
+        # Delete files inside of the output directory
+        files = glob.glob(os.path.join(outpath, '*'))
+        for f in files:
+            path = Path(f)
+            if path.is_file() and ("Zarpies/models" in f):
+                os.remove(f)
+
         tuned_model = finetune(
             m, data_path, outpath, use_original=True, masked=masked, save_file=False, overwrite_output_dir=True)
         emb = cwe.CWE(outpath)
