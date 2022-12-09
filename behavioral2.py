@@ -1,52 +1,101 @@
 import os
 import switch_cache  # <----- Comment out
-from utils import evaluate_surp, evaluate_surp_conditional
+from utils import evaluate_surp_conditional, get_model_paths, get_model_names_and_data
 import torch
 from minicons import scorer
+import nltk
+from nltk.corpus import wordnet
+
+nltk.download('omw-1.4')
+nltk.download('wordnet')
+
+
+def lemmatize_verb(v):
+    """
+    Input: [v] a verb to be lemmatized
+    Output: Lemmatized version of [v], if v was plural the output will be singular
+    ex:
+    """
+    # Dictionary that has conversions for a few words that fail to be lemmatized by NLTK
+    lm_dict = {"regrets": "regret", "waters": "water", "stays": "stay", "works": "work", "tours": "tour", "stops": "stop",
+               "rates": "rate", "links": "link", "works": "work", "does": "do", "is": "are", "pleases": "please", "imagines": "imagine"}
+    if (v in lm_dict.keys()):
+        return lm_dict[v]
+    else:
+        return wordnet.morphy(v)
+
+
+def construct_stimuli(sent):
+    sent = sent.replace("Zarpie", "zarpie").strip()
+    sent_base = " ".join(sent.split(" ")[1:])
+    sent_split = sent.split(" ")
+    sent_split[1] = f'{sent_split[1]}s'  # Plural zarpies
+    sent_split[2] = lemmatize_verb(sent_split[2])  # Lemmatized version of verb
+    # Pluralized sentence base for creating stimuli
+    sent_plural_base = " ".join(sent_split[1:])
+
+    quantifiers = ["One", "A few", "Some", "Most", "All"]
+    queries = []
+    for quant in quantifiers:
+        base = sent_plural_base
+        if quant == "One":
+            base = sent_base
+        queries.append(f'{quant} {base}')
+
+    predicate = sent
+    return (predicate, queries)
+
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-os.path.join(dir_path, 'models', 'incremental', 'gpt2_adapted_zarpiesT1')
 
-prefixes = ["This Zarpie buzzes when she’s angry.", "This Zarpie buzzes when she’s angry.",
-            "This Zarpie buzzes when she’s angry.", "This Zarpie buzzes when she’s angry.", "This Zarpie buzzes when she’s angry.",
-            "This Zarpie dances in circles.", "This Zarpie dances in circles.", "This Zarpie dances in circles.", "This Zarpie dances in circles.", "This Zarpie dances in circles."]
-queries = ["One Zarpie buzzes when they are angry.", "A few Zarpies buzz when they are angry.",
-           "Some Zarpies buzz when they are angry.", "Most Zarpies buzz when they are angry.", "All Zarpies buzz when they are angry.",
-           "One Zarpie dances in circles.",
-           "A few Zarpies dance in circles.",
-           "Some Zarpies dance in circles.",
-           "Most Zarpies dance in circles.",
-           "All Zarpies dance in circles."]
+data_path = os.path.join(dir_path, 'data', 'zarpiesCategorical.txt')
+dat = open(data_path, "r", encoding="UTF-8")
 
-surp1 = evaluate_surp_conditional(scorer.IncrementalLMScorer(os.path.join(dir_path, 'models', 'incremental', 'gpt2_adapted_zarpiesT1')),
-                                  prefixes, queries,
-                                  reduction=lambda x: -x.sum(0).item())
+results_path = os.path.join(dir_path, 'results', 'behavioral2.txt')
+os.system(f'touch {results_path}')
+res = open(results_path, "w", encoding="UTF-8")
 
-surp2 = evaluate_surp_conditional(scorer.IncrementalLMScorer(os.path.join(dir_path, 'models', 'incremental', 'gpt2_adapted_zarpiesT2')),
-                                  prefixes, queries,
-                                  reduction=lambda x: -x.sum(0).item())
+# Generate predicates and queries to get conditional surprisals
+predicates = []
+queries = []
+for sent in dat:
+    pred, qs = construct_stimuli(sent)
+    for q in qs:
+        predicates.append(pred)
+        queries.append(q)
 
-surp3 = evaluate_surp_conditional(scorer.IncrementalLMScorer(os.path.join(dir_path, 'models', 'incremental', 'gpt2_adapted_zarpiesT3')),
-                                  prefixes, queries,
-                                  reduction=lambda x: -x.sum(0).item())
+# Get a list of models and baseline models
+incremental_model_paths, masked_model_paths = get_model_paths()
+incremental_models, masked_models, _ = get_model_names_and_data()
+incremental_base_models = [m.replace("/", "_") for m in incremental_models]
+masked_base_models = [m.replace("/", "_") for m in masked_models]
+# Includes the tuned models as well as the baselines
+incremental_models = incremental_model_paths + incremental_models
+masked_models = masked_model_paths + masked_models
 
-surp4 = evaluate_surp_conditional(scorer.IncrementalLMScorer(os.path.join(dir_path, 'models', 'incremental', 'gpt2_adapted_zarpiesT4')),
-                                  prefixes, queries,
-                                  reduction=lambda x: -x.sum(0).item())
+# Main loop for calculating the surprisals
+incremental = True
+res.write("Surp(One) Surp(A_few) Surp(Some) Surp(Most) Surp(All)\n")
+res.write("BEGIN INCREMENTAL MODELS\n")
+for m in incremental_models+["SEP"]+masked_models:
+    if (m == "SEP"):
+        incremental = False
+        res.write("BEGIN MASKED MODELS\n")
+        continue
 
-surp5 = evaluate_surp_conditional(scorer.IncrementalLMScorer(os.path.join(dir_path, 'models', 'incremental', 'gpt2_adapted_zarpiesOriginalGeneric')),
-                                  prefixes, queries,
-                                  reduction=lambda x: -x.sum(0).item())
+    res.write("ModelName: "+m+"\n")
+    scorer_fn = None
+    if incremental:
+        scorer_fn = scorer.IncrementalLMScorer
+    else:
+        scorer_fn = scorer.MaskedLMScorer
 
-surp6 = evaluate_surp_conditional(scorer.IncrementalLMScorer(os.path.join(dir_path, 'models', 'incremental', 'gpt2_adapted_zarpiesOriginalSpecific')),
-                                  prefixes, queries,
-                                  reduction=lambda x: -x.sum(0).item())
+    scor = scorer_fn(m)
+    surps = evaluate_surp_conditional(scor,
+                                      predicates, queries,
+                                      reduction=lambda x: -x.sum(0).item())
+    composite_surps = [surps[x:x+5] for x in range(0, len(surps), 5)]
 
-print("Test prefixes:", prefixes)
-print("Test queries:", queries)
-print("GPT2 Type1 Primed Surprisals: ", surp1)
-print("GPT2 Type2 Primed Surprisals: ", surp2)
-print("GPT2 Type3 Primed Surprisals: ", surp3)
-print("GPT2 Type4 Primed Surprisals: ", surp4)
-print("GPT2 original generic Primed Surprisals: ", surp3)
-print("GPT2 original specific Primed Surprisals: ", surp4)
+    for cs in composite_surps:
+        cs = [str(c) for c in cs]
+        res.write(" ".join(cs)+"\n")

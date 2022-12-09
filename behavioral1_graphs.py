@@ -9,7 +9,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 # Collect and organize the data from the generated text file
-results_path = os.path.join(dir_path, 'results', 'behavioral1_t3.txt')
+results_path = os.path.join(dir_path, 'results', 'behavioral1.txt')
 res = open(results_path, "r", encoding="UTF-8")
 mode = "incremental"
 data_line = False

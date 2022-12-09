@@ -35,7 +35,7 @@ inc_model_orig, mas_models_orig, _ = get_model_names_and_data()
 incremental_models, masked_models = get_model_paths()
 incremental_models += inc_model_orig
 masked_models += mas_models_orig
-results_path = os.path.join(dir_path, 'results', 'behavioral1_t3.txt')
+results_path = os.path.join(dir_path, 'results', 'behavioral1.txt')
 os.system(f'touch {results_path}')
 res = open(results_path, "w", encoding="UTF-8")
 

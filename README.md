@@ -5,7 +5,9 @@ Create a new conda environment by doing these commands in order:
 conda create --name zarpie-env
 conda activate zarpie-env
 conda install pytorch pytorch-cuda=11.6 -c pytorch -c nvidia
+conda install nltk
 pip install minicons
+pip install transformers
 pip install datasets
 
 ## Experiment steps
