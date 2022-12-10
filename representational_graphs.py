@@ -22,13 +22,6 @@ for i, x in enumerate(res):
     sim_diff = float(sim_diff)
     res_dict[f'{model_name} {typ}'] = res_dict[f'{model_name} {typ}'] + sim_diff
 
-# avg_dict = defaultdict(float)
-# for key in res_dict.keys():
-#     model = key.split(" ")[0]
-#     typ = key.split(" ")[2]
-#     val = res_dict[key]
-#     avg_dict[f'{model} {typ}'] = avg_dict[f'{model} {typ}'] + val
-
 for key in res_dict.keys():
     res_dict[key] = res_dict[key] / 4
 

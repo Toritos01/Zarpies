@@ -1,18 +1,6 @@
 # Zarpies Experiment
 This README file will descibe step-by-step how you can replicate this study. If you are interested in just seeing the results, feel free to check the results folder of the repo and/or check out our writeup here <- TODO: Add a link for this
 
-## Environment Setup
-Create a new conda environment by doing these commands in order:
-```bash
-conda create --name zarpie-env
-conda activate zarpie-env
-conda install pytorch pytorch-cuda=11.6 -c pytorch -c nvidia
-conda install nltk
-pip install minicons
-pip install transformers
-pip install datasets
-```
-
 ## Experiment steps
 
 ### Method 1: Google Collab
@@ -34,6 +22,18 @@ these files already exist, you can choose to skip some steps (for example, you c
 
 ### Method 2: Command Line
 You can also manually run this study through the command line. Keep in mind that some systems may take a longer time to execute some of the python files, and some systems may run out of memory/crash upon execution. The steps below describe which python files need to be executed for each step of the analysis. The steps assume that you are inside of the root folder of this repository, using a UNIX command line.
+
+#### Environment Setup
+Create a new conda environment by doing these commands in order:
+```bash
+conda create --name zarpie-env
+conda activate zarpie-env
+conda install pytorch pytorch-cuda=11.6 -c pytorch -c nvidia
+conda install nltk
+pip install minicons
+pip install transformers
+pip install datasets
+```
 
 #### Finetune models
 1. Before running main.py, either comment out the line that says "import switch_cache"
