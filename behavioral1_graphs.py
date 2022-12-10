@@ -51,7 +51,6 @@ for x in res:
 # The innermost dictionary is indexed based on the data set used to adapt it
 # Access like this: result_dict_incremental[model_name][adaption_data_name] to get a list
 # of surprisals for that model when adapted with that data
-# print(result_dict_incremental['gpt2'])
 incremental_models, masked_models, finetune_data = get_model_names_and_data()
 
 cols = []
@@ -61,14 +60,9 @@ for m_i, m in enumerate(incremental_models+masked_models):
     for d_i, d in enumerate(finetune_data+['baseline']):
         d = d.replace('.txt', '')
         r = None
-        # print(m, d)
         if (m in incremental_models):
-            # r = [float(element1) - float(element2) for (element1, element2) in zip(
-            #     result_dict_incremental[m][d], result_dict_incremental[m]['baseline'])]
             r = result_dict_incremental[m][d]
         else:
-            # r = [float(element1) - float(element2) for (element1, element2) in zip(
-            #     result_dict_masked[m][d], result_dict_masked[m]['baseline'])]
             r = result_dict_masked[m][d]
 
         col.extend(r)
@@ -85,17 +79,12 @@ print(dt)
 column_labels = [x.replace("google/", "")
                  for x in (incremental_models+masked_models)]
 df = pandas.DataFrame(dt, columns=(column_labels))
-# df['Model'] = pandas.Series(['gpt2']*600 + ['distilgpt2']*600 + ['bert-base-uncased']*600 + [
-#                             'roberta-base']*600 + ['albert-base-v1']*600 + ['google/electra-base-generator']*600)
 df = df.reindex(columns=column_labels)
 
 df['adaptation data'] = pandas.Series(['T1']*99 + ['T2']*99 +
                                       ['T3']*99 + ['T4']*99 + ['OG']*99 + ['OS']*99 + ['BL']*99)
 
-# cat_dtype = pandas.CategoricalDtype(['T1', 'T2', ], ordered=True)
-
 fig, axes = plt.subplots(ncols=6, figsize=(14, 7), sharey=True)
-print(axes)
 df.boxplot(by='adaptation data', return_type='axes', ax=axes,
            column=(column_labels))
 
@@ -117,5 +106,4 @@ plt.figtext(0.9, 0.01, "T4 = Adapted with specific sentences (singular)",
 axes[0].set_ylabel(
     "conditional surprisal of 'Jane ____' given 'Jane is a Zarpie'")
 
-# plt.show()
 plt.savefig(os.path.join(dir_path, "results", "behavioral1_graph.png"))

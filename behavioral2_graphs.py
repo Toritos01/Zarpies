@@ -68,10 +68,8 @@ for x in res:
             m_name = curr_model_name
             d_name = "baseline"
             if not (curr_model_name in all_models):
-                print(curr_model_name.split(sep))
                 m_name, d_name = curr_model_name.split(
                     sep)[-1].split("_adapted_")
-            print(m_name, d_name)
 
             # Form arrays that can be used by pandas from the accumulated results
             result_accum_avg = [x / total_examples for x in result_accum_avg]

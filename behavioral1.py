@@ -14,7 +14,24 @@ device = 'cpu'  # cuda' if torch.cuda.is_available() else 'cpu'
 print(f'using device: {device}')
 # Limiting split size to not run out of memory
 os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'max_split_size_mb:4096'
-# os.environ['PYTORCH_NO_CUDA_MEMORY_CACHING'] = '1'
+
+
+def get_surprisals_batched(scor, preds, queries, batch_size=10):
+    """
+       Evaluates conditional surprisals with a scorer in batches.
+       This is done in batches because the conditional evaluation function
+       uses a lot of memory when working with very long predicate/query lists
+    """
+    arr = []
+    for x in range(0, len(preds), batch_size):
+        inc = min(x+batch_size, len(preds))
+        ps = preds[x:inc]
+        qs = queries[x:inc]
+        surps = evaluate_surp_conditional(
+            scor, ps, qs, reduction=lambda x: -x.sum(0).item())
+        arr.extend(surps)
+    return arr
+
 
 # Generate prefixes and queries
 prefixes = []
@@ -44,8 +61,8 @@ res.write("BEGIN INCREMENTAL MODELS\n")
 for model_pth in incremental_models:
     if (device == 'cuda'):
         torch.cuda.empty_cache()
-    surp = evaluate_surp_conditional(
-        scorer.IncrementalLMScorer(model_pth, device=device), prefixes, queries)
+    scor = scorer.IncrementalLMScorer(model_pth, device=device)
+    surp = get_surprisals_batched(scor, prefixes, queries, batch_size=10)
     res.write(model_pth+'\n')
     res.write(" ".join([format(x, "10.5f") for x in surp])+'\n')
 
@@ -54,12 +71,10 @@ res.write("BEGIN MASKED MODELS\n")
 for model_pth in masked_models:
     if (device == 'cuda'):
         torch.cuda.empty_cache()
-    print(model_pth)
-    with torch.no_grad():
-        s = scorer.MaskedLMScorer(model_pth, device=device)
-        surp = evaluate_surp_conditional(
-            s, prefixes, queries)
-        res.write(model_pth+'\n')
-        res.write(" ".join([format(x, "10.5f") for x in surp])+'\n')
+    scor = scorer.MaskedLMScorer(model_pth, device=device)
+    surp = get_surprisals_batched(scor, prefixes, queries, batch_size=10)
+
+    res.write(model_pth+'\n')
+    res.write(" ".join([format(x, "10.5f") for x in surp])+'\n')
 
 res.close()
