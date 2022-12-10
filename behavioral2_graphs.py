@@ -29,7 +29,7 @@ def make_pandas_barchart(data, outpath, y_labl, title):
     # Change the plot dimensions (width, height)
     fig.set_size_inches(7, 8)
     # Change the axes labels
-    ax.set_xlabel("Quantifier")
+    ax.set_xlabel("Priming Dataset")
     ax.set_ylabel(y_labl)
 
     # Export the plot as a PNG file
