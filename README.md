@@ -3,6 +3,7 @@ This README file will descibe step-by-step how you can replicate this study. If 
 
 ## Environment Setup
 Create a new conda environment by doing these commands in order:
+```bash
 conda create --name zarpie-env
 conda activate zarpie-env
 conda install pytorch pytorch-cuda=11.6 -c pytorch -c nvidia
@@ -10,6 +11,7 @@ conda install nltk
 pip install minicons
 pip install transformers
 pip install datasets
+```
 
 ## Experiment steps
 
@@ -17,7 +19,8 @@ pip install datasets
 Some of the code in this repository may take a fairly long amount of time to run,
 and could exceed the memory limits of your system depending on your hardware. For 
 this reason, we have set up an easy way to replicate this study through a series of
-Google Collaboratory ipynb notebooks.
+Google Collaboratory ipynb notebooks. In a Collab notebook with a free GPU, each of the
+notebooks should only take around 10 minutes to run.
 
 1. Make a copy of the Google Drive folder at this (link)[https://drive.google.com/drive/folders/1Wh0iZ5YH933eFqr99-pTqlhimua8Kx10?usp=share_link]
 2. All the result files, pre-trained models, training data, and graphs will already be present inside of this folder, 
@@ -41,7 +44,7 @@ whichever location you would like huggingface to cache models on your computer
 python files finetune and analyze whichever combination of models/data you want.
 The file will come pre-loaded with the model names and data paths that we used for this
 study.
-4. To initiate the finetuning, do "python main.py"
+4. To initiate the finetuning, run "python main.py" in your prompt
 
 #### Analysis 1 - Representational
 1. Run the "python representational.py" command to generate a text file with experimental results
