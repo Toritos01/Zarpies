@@ -117,4 +117,5 @@ plt.figtext(0.9, 0.01, "T4 = Adapted with specific sentences (singular)",
 axes[0].set_ylabel(
     "conditional surprisal of 'Jane ____' given 'Jane is a Zarpie'")
 
-plt.show()
+# plt.show()
+plt.savefig(os.path.join(dir_path, "results", "behavioral1_graph.png"))
