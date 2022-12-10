@@ -46,6 +46,22 @@ def construct_stimuli(sent):
     return (predicate, queries)
 
 
+def get_surprisals_batched(scor, preds, queries):
+    """
+       Evaluates conditional surprisals with a scorer in batches.
+       This is done in batches because the conditional evaluation function
+       uses a lot of memory when working with very long predicate/query lists
+    """
+    arr = []
+    for x in range(0, len(preds), 5):
+        ps = preds[x:x+5]
+        qs = queries[x:x+5]
+        surps = evaluate_surp_conditional(
+            scor, ps, qs, reduction=lambda x: -x.sum(0).item())
+        arr.append(surps)
+    return arr
+
+
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 data_path = os.path.join(dir_path, 'data', 'zarpiesCategorical.txt')
@@ -67,6 +83,7 @@ for sent in dat:
 # Get a list of models and baseline models
 incremental_model_paths, masked_model_paths = get_model_paths()
 incremental_models, masked_models, _ = get_model_names_and_data()
+masked_models = [m.replace("/", "_") for m in masked_models]
 incremental_base_models = [m.replace("/", "_") for m in incremental_models]
 masked_base_models = [m.replace("/", "_") for m in masked_models]
 # Includes the tuned models as well as the baselines
@@ -91,11 +108,10 @@ for m in incremental_models+["SEP"]+masked_models:
         scorer_fn = scorer.MaskedLMScorer
 
     scor = scorer_fn(m)
-    surps = evaluate_surp_conditional(scor,
-                                      predicates, queries,
-                                      reduction=lambda x: -x.sum(0).item())
-    composite_surps = [surps[x:x+5] for x in range(0, len(surps), 5)]
+    composite_surps = get_surprisals_batched(scor, predicates, queries)
 
     for cs in composite_surps:
         cs = [str(c) for c in cs]
         res.write(" ".join(cs)+"\n")
+
+res.write("ModelName: DONE"+"\n")

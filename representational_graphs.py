@@ -46,23 +46,16 @@ print(df)
 
 inc, mas, _ = get_model_names_and_data()
 models = inc+mas
-# mapping = {mod: i for i, mod in enumerate(models)}
-# key = df['model'].map(mapping)
-# df.iloc[key.argsort()]
 
-
-# Pivot the DF so that there's a column for each month, each row\
-# represents a year, and the cells have the mean page views for the\
-# respective year and month
+# Pivot the DF so that there's a column for each dataset, each row\
+# represents a model, and the cells have the mean representational difference for the\
+# respective model/dataset
 df_pivot = pandas.pivot_table(
     df,
     values="delta",
     index="model",
     columns="prime-type"
 ).loc[models]
-
-# df.set_index('model').loc[models].groupby('group').plot(kind='bar')
-
 
 # Plot a bar chart using the DF
 ax = df_pivot.plot(kind="bar")
@@ -73,12 +66,7 @@ fig.set_size_inches(7, 8)
 # Change the axes labels
 ax.set_xlabel("Priming Data")
 ax.set_ylabel("Change in representational proximity to career")
-# fig.subplots_adjust(bottom=0.15)
-# ax = df.delta.value_counts().loc[inc+mas].plot.bar()
 
-
-# Use this to show the plot in a new window
-# plt.show()
 # Export the plot as a PNG file
 fig.set_tight_layout(True)
 fig.savefig(os.path.join(dir_path, "results", "representational_bars.png"))
