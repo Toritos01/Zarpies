@@ -1,5 +1,5 @@
 # Zarpies Experiment
-This README file will descibe step-by-step how you can replicate this study. If you are interested in just seeing the results, feel free to check the results folder of the repo and/or check out our writeup here <- TODO: Add a link for this
+This README file will descibe step-by-step how you can replicate this study. If you are interested in just seeing the results, feel free to check the results folder of the repo and/or check out our writeup [here]() <- TODO: Add a link for this
 
 ## Experiment steps
 
@@ -10,7 +10,7 @@ this reason, we have set up an easy way to replicate this study through a series
 Google Collaboratory ipynb notebooks. In a Collab notebook with a free GPU, each of the
 notebooks should only take around 10 minutes to run.
 
-1. Make a copy of the Google Drive folder at this (link)[https://drive.google.com/drive/folders/1Wh0iZ5YH933eFqr99-pTqlhimua8Kx10?usp=share_link]
+1. Make a copy of the Google Drive folder at this [link](https://drive.google.com/drive/folders/1Wh0iZ5YH933eFqr99-pTqlhimua8Kx10?usp=share_link)
 2. All the result files, pre-trained models, training data, and graphs will already be present inside of this folder, 
 but if you would like to re-create these files you can follow the next few steps to replicate the study. Note that since
 these files already exist, you can choose to skip some steps (for example, you could just run the analyses without finetuning the models)
