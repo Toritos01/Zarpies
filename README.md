@@ -50,7 +50,7 @@ study.
 1. Run the "python representational.py" command to generate a text file with experimental results
 2. Run the "python representational_graphs.py" command to generate graphs based on the results.
 
-#### Analysis 2 - Jane Behavioral
+#### Analysis 2 - "Jane" Behavioral
 1. Run the "python behavioral1.py" command to generate a text file with experimental results
 2. Run the "python behavioral1_graphs.py" command to generate graphs based off the results.
 
