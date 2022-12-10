@@ -57,3 +57,20 @@ study.
 #### Analysis 3 - Categorical Behavioral
 1. Run the "python behavioral2.py" command to generate a text file with experimental results
 2. Run the "python behavioral2_graphs.py" command to generate graphs based off the results.
+
+## Running this experiment with different models/adaptation data
+The analyses that were done for this experiment should be easily replicable for
+other language models(incremental or masked transformer models on HuggingFace).
+To use different models, modify the get_model_names_and_data() inside of utils.py
+and simply change the incremental_models, masked_models, and finetune_data variables to whichever
+models and data you would like to use. Also make sure that the strings you put in the finetune_data
+array correspond to files of the same name in the data folder.
+
+If you are running the code in the Google Collab ipynb notebooks, you will have to 
+modify the get_model_names_and_data() for each ipynb file since the notebooks do not
+reference a utils.py file.
+
+Also note that certain filenames and model names may cause bugs in the code.
+Datafiles or language models with the string "\_adapted\_" in the name will break the code,
+as well as backslashes or datafiles nested in folders. The forward slash case is already 
+accounted for because of the google/electra-base-generator model used in the current experiments.
