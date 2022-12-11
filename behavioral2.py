@@ -83,7 +83,6 @@ for sent in dat:
 # Get a list of models and baseline models
 incremental_model_paths, masked_model_paths = get_model_paths()
 incremental_models, masked_models, _ = get_model_names_and_data()
-masked_models = [m.replace("/", "_") for m in masked_models]
 incremental_base_models = [m.replace("/", "_") for m in incremental_models]
 masked_base_models = [m.replace("/", "_") for m in masked_models]
 # Includes the tuned models as well as the baselines
@@ -100,7 +99,8 @@ for m in incremental_models+["SEP"]+masked_models:
         res.write("BEGIN MASKED MODELS\n")
         continue
 
-    res.write("ModelName: "+m+"\n")
+    m_safe = m.replace("/", "_")
+    res.write("ModelName: "+m_safe+"\n")
     scorer_fn = None
     if incremental:
         scorer_fn = scorer.IncrementalLMScorer
