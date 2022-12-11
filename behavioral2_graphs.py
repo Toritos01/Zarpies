@@ -10,7 +10,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 def make_pandas_barchart(data, outpath, y_labl, title):
     _, _, datasets = get_model_names_and_data()
-    datasets = [d.replace(".txt", "") for d in datasets]
+    datasets = ["baseline"] + [d.replace(".txt", "") for d in datasets]
 
     df = pandas.DataFrame(data, columns=['prime-data', 'quantifier', 'value'])
     df['quantifier'] = pandas.Categorical(df['quantifier'],
