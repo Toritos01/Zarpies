@@ -99,7 +99,16 @@ for m in incremental_models+["SEP"]+masked_models:
         res.write("BEGIN MASKED MODELS\n")
         continue
 
-    m_safe = m.replace("/", "_")
+    typ = "incremental" if incremental else "masked"
+    sep = typ+("\\" if "\\" in m else "/")
+    m_safe = m
+    if sep in m:
+        # Remove the / from model names like google/electra
+        m_safe = sep.join([m.split(sep)[0]] +
+                          [m.split(sep)[1].replace("/", "_")])
+    else:
+        m_safe = m.replace("/", "_")
+
     res.write("ModelName: "+m_safe+"\n")
     scorer_fn = None
     if incremental:

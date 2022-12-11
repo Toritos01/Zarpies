@@ -64,7 +64,7 @@ for x in res:
         # If there are previous results and a previous model, write those results to pandas arrays
         if not(curr_model_name == None):
             # Get the name of the previous model + adaptation data
-            sep = "/" if "/" in curr_model_name else "\\"
+            sep = "\\" if "\\" in curr_model_name else "/"
             m_name = curr_model_name
             d_name = "baseline"
             if not (curr_model_name in all_models):
