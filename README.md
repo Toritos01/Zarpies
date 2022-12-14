@@ -1,5 +1,5 @@
 # Zarpies Experiment
-This README file will descibe step-by-step how you can replicate this study. If you are interested in just seeing the results, feel free to check the results folder of the repo and/or check out our writeup [here]() <- TODO: Add a link for this
+This README file will descibe step-by-step how you can replicate this study. If you are interested in just seeing the results, feel free to check the results folder of the repo and/or check out our writeup [here](https://docs.google.com/document/d/1q1UP9DNB-60G2YxkcBFEKeIL_fXKDFRqCYuNCVpDPqY/edit?usp=sharing).
 
 ## Experiment steps
 
