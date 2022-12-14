@@ -15,6 +15,13 @@ print(f'using device: {device}')
 # Limiting split size to not run out of memory
 os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'max_split_size_mb:4096'
 
+# Set this to true to test for surprisals in the reverse direction.
+# "conditional surprisal of 'Jane is a Zarpie' given 'Jane ____'" if reverse is True
+# "conditional surprisal of 'Jane ____' given 'Jane is a Zarpie'" if reverse is False
+# Make sure to also change this variable in the behavioral1_graphs.py to genereate the reversed graphs
+# The filename for the reversed text results and reversed graphs will be different
+reverse = False
+
 
 def get_surprisals_batched(scor, preds, queries, batch_size=10):
     """
@@ -43,19 +50,19 @@ f = open(zarpiesT4_path, "r")
 for s in f:
     # Converts the sentence from "This zarpie ___." into "{name} ___."
     new_sent = f'{name}{s[11:]}.'
+    if reverse:
+        prefix, new_sent = new_sent, prefix
     prefixes.append(prefix)
     queries.append(new_sent)
 f.close()
-print(prefix)
-print(queries)
-exit(0)
 
 # Calculate and write surprisals for each model
 inc_model_orig, mas_models_orig, _ = get_model_names_and_data()
 incremental_models, masked_models = get_model_paths()
 incremental_models += inc_model_orig
 masked_models += mas_models_orig
-results_path = os.path.join(dir_path, 'results', 'behavioral1.txt')
+outfile_name = 'behavioral1_reverse.txt' if reverse else 'behavioral1.txt'
+results_path = os.path.join(dir_path, 'results', outfile_name)
 os.system(f'touch {results_path}')
 res = open(results_path, "w", encoding="UTF-8")
 

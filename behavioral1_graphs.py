@@ -8,8 +8,17 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
+# Set this to true to test for surprisals in the reverse direction.
+# "conditional surprisal of 'Jane is a Zarpie' given 'Jane ____'" if reverse is True
+# "conditional surprisal of 'Jane ____' given 'Jane is a Zarpie'" if reverse is False
+# Make sure to also change this variable in the behavioral1_graphs.py to genereate the reversed graphs
+# The filename for the reversed text results and reversed graphs will be different
+reverse = False
+
+
 # Collect and organize the data from the generated text file
-results_path = os.path.join(dir_path, 'results', 'behavioral1.txt')
+outfile_name = 'behavioral1_reverse.txt' if reverse else 'behavioral1.txt'
+results_path = os.path.join(dir_path, 'results', outfile_name)
 res = open(results_path, "r", encoding="UTF-8")
 mode = "incremental"
 data_line = False
@@ -103,7 +112,10 @@ plt.figtext(0.9, 0.03, "T3 = Adapted with generic sentences(with the word 'these
 plt.figtext(0.9, 0.01, "T4 = Adapted with specific sentences (singular)",
             wrap=True, horizontalalignment='right', fontsize=8)
 
-axes[0].set_ylabel(
-    "conditional surprisal of 'Jane ____' given 'Jane is a Zarpie'")
+y_label = "conditional surprisal of 'Jane is a Zarpie' given 'Jane ____'" if reverse else "conditional surprisal of 'Jane ____' given 'Jane is a Zarpie'"
 
-plt.savefig(os.path.join(dir_path, "results", "behavioral1_graph.png"))
+axes[0].set_ylabel(
+    y_label)
+
+image_output_name = "behavioral1_reverse_graph.png" if reverse else "behavioral1_graph.png"
+plt.savefig(os.path.join(dir_path, "results", image_output_name))
