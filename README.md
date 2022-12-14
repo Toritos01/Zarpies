@@ -17,8 +17,9 @@ these files already exist, you can choose to skip some steps (for example, you c
 3. First, if you would like to re-finetune the models, either delete, rename, or move all of files in the models folder (delete files inside of the masked and incremental subfolders). This is to prevent the already pre-trained models from being re-trained.
 4. To run the fine-tuning, open up the finetune.ipynb file in collab. Note that if you would like to accelerate the execution of these files, Google collab allows you to make use of a free GPU (Click the "Runtime" tab at the top and select "Change Runtime Type").
 5. Execute each cell in the finetune notebook sequentially, after some time the new finetuned models will appear in subfolders of the models folder
-6. Now that you have finetuned models, you can run three different analyses of these models through three of the other ipynb notebooks in the folder (representational.ipynb, behavioral1.ipynb, and behavioral2.ipynb). You can execute the cells in each of these files sequentially, and it will result in some text-files and graphs being generated inside of the results folder (note that these result files are already present in the folder, but running the notebook will overwrite the old values)
-6a. For each of these analysis ipynb notebooks, you can also skip the first half of the notebook if you just want to generate graphs based on the already present text data. This is useful for cases where you don't want to wait for the analysis code to re-execute, since the number results are saved in an intermediary text file.
+6. Now that you have finetuned models, you can run three different analyses of these models through three of the other ipynb notebooks in the folder (representational.ipynb, behavioral1.ipynb, behavioral1_reversed.ipynb, and behavioral2.ipynb). You can execute the cells in each of these files sequentially, and it will result in some text-files and graphs being generated inside of the results folder (note that these result files are already present in the folder, but running the notebook will overwrite the old values)
+6a. For the behavioral1 experiment, make sure to run both the original and "reversed" version of the ipynb, they will run the same test but with predicates and queries swapped, and will save results to separate files/images.
+6b. For each of these analysis ipynb notebooks, you can also skip the first half of the notebook if you just want to generate graphs based on the already present text data. This is useful for cases where you don't want to wait for the analysis code to re-execute, since the number results are saved in an intermediary text file.
 
 ### Method 2: Command Line
 You can also manually run this study through the command line. Keep in mind that some systems may take a longer time to execute some of the python files, and some systems may run out of memory/crash upon execution. The steps below describe which python files need to be executed for each step of the analysis. The steps assume that you are inside of the root folder of this repository, using a UNIX command line.
@@ -49,14 +50,21 @@ study.
 #### Analysis 1 - Representational
 1. Run the "python representational.py" command to generate a text file with experimental results
 2. Run the "python representational_graphs.py" command to generate graphs based on the results.
+3. Check results in the following files: results/representational.txt, results/representational_bars.png
 
 #### Analysis 2 - "Jane" Behavioral
-1. Run the "python behavioral1.py" command to generate a text file with experimental results
-2. Run the "python behavioral1_graphs.py" command to generate graphs based off the results.
+We ran this analysis in two different directions (reverse direction swaps the predicates and queries),
+therefore for this analysis you will have to run four python commands instead of two.
+1. Run the "python behavioral1.py -r False" command to generate a text file with experimental results
+2. Run the "python behavioral1_graphs.py -r False" command to generate graphs based off the results.
+3. Run the "python behavioral1.py -r True" command to generate a text file with reversed experimental results
+4. Run the "python behavioral1_graphs.py -r True" command to generate graphs based off the reversed results.
+5. Check results in the following files: results/behavioral1.txt, results/behavioral1_graph.png, results/behavioral1_reverse.txt, results/behavioral1_reverse_graph.png
 
 #### Analysis 3 - Categorical Behavioral
 1. Run the "python behavioral2.py" command to generate a text file with experimental results
 2. Run the "python behavioral2_graphs.py" command to generate graphs based off the results.
+3. Check results in the following files: results/behavioral2.txt, results/behavioral2_graphs (two subfolders with 6 images each)
 
 ## Running this experiment with different models/adaptation data
 The analyses that were done for this experiment should be easily replicable for
