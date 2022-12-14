@@ -4,17 +4,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas
 from utils import get_model_names_and_data
+import argparse
+
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-# Set this to true to test for surprisals in the reverse direction.
+# Set this to true to test for surprisals in the reverse direction, currently the value
+# for this variable is taken as the first command line argument.
 # "conditional surprisal of 'Jane is a Zarpie' given 'Jane ____'" if reverse is True
 # "conditional surprisal of 'Jane ____' given 'Jane is a Zarpie'" if reverse is False
 # Make sure to also change this variable in the behavioral1_graphs.py to genereate the reversed graphs
 # The filename for the reversed text results and reversed graphs will be different
-reverse = False
-
+argParser = argparse.ArgumentParser()
+argParser.add_argument(
+    "-r", "--reverse", help="Insert True or False, determines if results should be reversed")
+args = argParser.parse_args()
+reverse = args.reverse.lower() if isinstance(args.reverse, str) else "false"
+reverse = True if reverse == "true" else False
 
 # Collect and organize the data from the generated text file
 outfile_name = 'behavioral1_reverse.txt' if reverse else 'behavioral1.txt'
