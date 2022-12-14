@@ -36,7 +36,7 @@ def get_surprisals_batched(scor, preds, queries, batch_size=10):
 # Generate prefixes and queries
 prefixes = []
 queries = []
-zarpiesT4_path = os.path.join(dir_path, 'data', 'zarpiesT3.txt')
+zarpiesT4_path = os.path.join(dir_path, 'data', 'zarpiesT4.txt')
 name = 'Jane'
 prefix = f'{name} is a Zarpie.'
 f = open(zarpiesT4_path, "r")
@@ -46,6 +46,9 @@ for s in f:
     prefixes.append(prefix)
     queries.append(new_sent)
 f.close()
+print(prefix)
+print(queries)
+exit(0)
 
 # Calculate and write surprisals for each model
 inc_model_orig, mas_models_orig, _ = get_model_names_and_data()
