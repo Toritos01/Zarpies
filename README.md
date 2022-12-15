@@ -82,3 +82,11 @@ Also note that certain filenames and model names may cause bugs in the code.
 Datafiles or language models with the string "\_adapted\_" in the name will break the code,
 as well as backslashes or datafiles nested in folders. The forward slash case is already 
 accounted for because of the google/electra-base-generator model used in the current experiments.
+
+## Citations
+@article{misra2022minicons,
+    title={minicons: Enabling Flexible Behavioral and Representational Analyses of Transformer Language Models},
+    author={Kanishka Misra},
+    journal={arXiv preprint arXiv:2203.13112},
+    year={2022}
+}
